@@ -1,21 +1,30 @@
 #define BASE_ADDRESS 0xB000
+#define ARR_LENGTH 12
+#define COLOR_ARRAY 16
 void main(){
 	
-	int addrVideoMem = 160;
-	int i, j;
-	int x = 0x8000;
+	//Relative Mem Video Address
+	int RMVA = 160;
+	int memVideoAddr = 0x8000;
+	int x, y, i;
+	char* text = "Hello World!";
 
-	for(i=0; i < 30; i = i+1){
-		for(j=0; j < addrVideoMem; j = j+1){
-			putInMemory(BASE_ADDRESS, x+(j)+(i*addrVideoMem), 0x0);
-			putInMemory(BASE_ADDRESS, x+(j+1)+(i*addrVideoMem), 0x1);
+	for(x=0; x < 30; x = x+1){
+		for(y=0; y < RMVA; y = y+1){
+			putInMemory(BASE_ADDRESS, memVideoAddr+(y)+(x*RMVA), 0x0);
+			putInMemory(BASE_ADDRESS, memVideoAddr+(y+1)+(x*RMVA), 0x1);
 		}
 	}
 
-	putInMemory(BASE_ADDRESS, 0x8140, 'R');
-	putInMemory(BASE_ADDRESS, 0x8141, 0x7);
-	putInMemory(BASE_ADDRESS, 0x8142, 'M');
-	putInMemory(BASE_ADDRESS, 0x8143, 0x7);
-	putInMemory(BASE_ADDRESS, 0x8144, 'M');
-	putInMemory(BASE_ADDRESS, 0x8145, 0x7);
+	for(x=0; x < COLOR_ARRAY; x = x+1){
+		y = (x*2)*RMVA+10;
+		for(i=0; i < ARR_LENGTH; i = i+1){
+			putInMemory(BASE_ADDRESS, memVideoAddr+y, text[i]);
+			putInMemory(BASE_ADDRESS, memVideoAddr+1+y, i);	
+			memVideoAddr+=2;		
+		}
+		memVideoAddr-=(ARR_LENGTH*2);	
+	}	
+
+	
 }
