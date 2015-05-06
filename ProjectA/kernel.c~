@@ -11,16 +11,24 @@ void main(){
 
 	for(x=0; x < 30; x = x+1){
 		for(y=0; y < RMVA; y = y+1){
-			putInMemory(BASE_ADDRESS, memVideoAddr+(y)+(x*RMVA), 0x0);
-			putInMemory(BASE_ADDRESS, memVideoAddr+(y+1)+(x*RMVA), 0x1);
+			putInMemory(BASE_ADDRESS, memVideoAddr+(y)+(x*RMVA),0x00);
+			putInMemory(BASE_ADDRESS, memVideoAddr+(y+1)+(x*RMVA), 0x0);
+		}
+	}
+
+	for(x=0; x < 30; x = x+1){
+		for(y=0; y < RMVA; y = y+1){
+			if(y==0 || y==40 || y==80 || y==120 || y == 158){
+			putInMemory(BASE_ADDRESS, memVideoAddr+(y)+(x*RMVA), 0x221);
+			putInMemory(BASE_ADDRESS, memVideoAddr+(y+1)+(x*RMVA), 0x34);
+			}		
 		}
 	}
 
 	for(x=0; x < COLOR_ARRAY; x = x+1){
-		y = (x*2)*RMVA+10;
 		for(i=0; i < ARR_LENGTH; i = i+1){
-			putInMemory(BASE_ADDRESS, memVideoAddr+y, text[i]);
-			putInMemory(BASE_ADDRESS, memVideoAddr+1+y, i);	
+			putInMemory(BASE_ADDRESS, memVideoAddr+10+(x*RMVA), text[i]);
+			putInMemory(BASE_ADDRESS, memVideoAddr+11+(x*RMVA), i+1);
 			memVideoAddr+=2;		
 		}
 		memVideoAddr-=(ARR_LENGTH*2);	
