@@ -1,7 +1,7 @@
 all: floppya.img
 run: all
 	bochs -f opsys.bxrc
-kernel.bin: kernel.o kernel_asm.o
+kernel.bin: start.o kernel.o kernel_asm.o
 	ld86 -o $@ -d $^
 kernel.o: kernel.c
 	bcc -ansi -c -o $@ $<
@@ -9,6 +9,8 @@ kernel_asm.o: kernel.asm
 	as86 $< -o $@
 bootload.bin: bootload.asm
 	nasm $< -f bin -o $@
+start.o: start.asm
+	as86 $< -o $@
 floppya.img: bootload.bin kernel.bin
 	dd if=/dev/zero of=floppya.img bs=512 count=2880
 	dd if=bootload.bin of=floppya.img bs=512 count=1 conv=notrunc
