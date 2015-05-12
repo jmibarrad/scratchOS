@@ -32,10 +32,8 @@ _printChar:
 	ret
 
 _readChar:
-	push bp
 	mov ah, #0
 	int #0x16
-	pop bp
 	ret
 
 _loadProgram:

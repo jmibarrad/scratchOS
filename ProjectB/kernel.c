@@ -4,9 +4,15 @@
 void printString(char* text);
 void cleanScreen();
 void main(){
-
+	int i;
 	char* text = "Hello";
+	char* charac;
 	//cleanScreen();
+	
+	for(i=0; i<8; i=i+1){
+		charac[i] = readChar();
+		printChar(charac[i]);
+	}
 	printString(text);	
 	
 }
