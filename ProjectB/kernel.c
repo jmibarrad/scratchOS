@@ -1,6 +1,6 @@
 #define BASE_ADDRESS 0xB000
 #define RMVA 160
-
+#define memVideoAddr 0x8000
 void printString(char* text);
 void cleanScreen();
 void main(){
@@ -19,7 +19,8 @@ void printString(char* text){
 }
 
 void cleanScreen(){
-	
+
+	int x,y;
 	for(y=0; y < 25; y = y+1){
 		for(x=0; x < RMVA; x = x+1){
 			putInMemory(BASE_ADDRESS, memVideoAddr+(x)+(y*RMVA),0x0);
