@@ -25,11 +25,10 @@ _putInMemory:
 	ret
 
 _printChar: 
-	push bp
-	mov al, [bp+4]  
+	mov si, sp
+	mov al, [si+2]  
 	mov ah, #0x0e
 	int #0x10
-	pop bp
 	ret
 
 _readChar:
