@@ -5,7 +5,7 @@
 
 void printString(char* str);
 void cleanScreen();
-void readString(char str[]);
+void readString(chr str[]);
 void nextLine();
 
 void main(){

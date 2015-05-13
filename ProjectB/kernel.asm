@@ -9,7 +9,13 @@
 	.global _readChar
 	.global _printChar
 	.global _readSector
-	;	.extern _handleInterrupt21
+	.global _end
+	.global _ps
+	.global _rs
+	.global _interrupt21ServiceRoutine
+	.extern _printString
+	.extern _readString
+	
 
 ;void putInMemory (int segment, int address, char character)
 _putInMemory:
@@ -79,12 +85,12 @@ _readSector:
 	xor dx, dx
 	mov dl, ah
 	mov [bp-6], dx
-	mov ah, #0x2
+	mov ah, #0x2 	;Read Sector
 	mov al, #0x1
 	mov ch, [bp-2]
 	mov cl, [bp-6]
 	mov dh, [bp-4]
-	mov dl, #0
+	mov dl, #0 		;End Read Sector
 	int #0x13
 	add sp, #6
 	pop bp
@@ -107,19 +113,29 @@ _makeInterrupt21:
 	mov [si],dx	;set up our vector
 	pop ds
 	ret
+
+_ps:
+	call _printString
+	jmp _end
+	
+_rs:
+	call _readString
+	jmp _end
 	
 ;this is called when interrupt 21 happens
 ;it will call your function:
 ;void handleInterrupt21 (int AX, int BX, int CX, int DX)
 _interrupt21ServiceRoutine:
-;	push dx
-;	push cx
-;	push bx
-;	push ax
-;	call _handleInterrupt21
-;	pop ax
-;	pop bx
-;	pop cx
-;	pop dx
-
-;	iret
+	cmp ax, #0
+	je _ps
+	
+	cmp ax, #1
+	je _rs
+	
+	cmp ax, #2
+	je _readSector
+	
+	jmp _end
+	
+_end:
+	ret
