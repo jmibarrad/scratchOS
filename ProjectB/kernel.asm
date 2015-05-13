@@ -79,7 +79,15 @@ _readSector:
 	xor dx, dx
 	mov dl, ah
 	mov [bp-6], dx
+	mov ah, #0x2
+	mov al, #0x1
+	mov ch, [bp-2]
+	mov cl, [bp-6]
+	mov dh, [bp-4]
+	mov dl, #0
+	int #0x13
 	add sp, #6
+	pop bp
 	ret
 	
 ;void makeInterrupt21()
