@@ -3,14 +3,14 @@
 #define memVideoAddr 0x8000
 #define strLength 80
 
-void printString(char* str);
+void printString(char str[]);
 void cleanScreen();
-void readString(chr str[]);
+void readString(char str[]);
 void nextLine();
 
 void main(){
 
-	char str[strLength];
+	/*char str[strLength];
 	char buffer[512];
 	char* str2 = "Enter your name: ";
 	
@@ -22,10 +22,15 @@ void main(){
 	printString(buffer);
 
 	printString("Program Finished");
-
+*/
+	cleanScreen();
+	setCursor();
+	makeInterrupt21();
+	loadProgram();
+	
 }
 
-void printString(char* str){
+void printString(char str[]){
 	int i;	
 	for(i=0; str[i]!='\0'; i++){
 		printChar(str[i]);
@@ -35,16 +40,20 @@ void printString(char* str){
 
 void readString(char str[]){
 	int i;
+	for(i=0; i<strLength; i++)
+		str[i] = 0x0;	
+
 	for(i=0; i<strLength; i++){
 		char current = readChar();
 		if(current == 0xD){	
 			i=strLength;
 			nextLine();
-		}else if(current == 0x8 && i!=0){
+		}else if(current == 0x8 && i>0){
 			printChar(current);
-			printChar(' ');
+			printChar(0x0);
 			printChar(current);
-			i = i-2;
+			i = i - 2;
+			
 		}else{
 			str[i] = current;
 			printChar(str[i]);

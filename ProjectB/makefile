@@ -9,7 +9,7 @@ kernel_asm.o: kernel.asm
 	as86 $< -o $@
 start.o: start.asm
 	as86 $< -o $@
-userprog/syscall_test.bin: userprog/Test.o userprog/os_api.o
+userprog/syscall_test.bin: userprog/start.o userprog/Test.o userprog/os_api.o
 	ld86 -o $@ -d $^
 userprog/Test.o: userprog/Test.c
 	bcc -ansi -c -o $@ $<
