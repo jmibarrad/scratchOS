@@ -35,28 +35,27 @@ void printString(char str[]){
 	for(i=0; str[i]!='\0'; i++){
 		printChar(str[i]);
 	}
-	nextLine();
+	//nextLine();
 }
 
 void readString(char str[]){
 	int i;
+	char current = 0;
 	for(i=0; i<strLength; i++)
 		str[i] = 0x0;	
+	i=0;
+	while( current != 0xD ){
+		current = readChar();
 
-	for(i=0; i<strLength; i++){
-		char current = readChar();
-		if(current == 0xD){	
-			i=strLength;
-			nextLine();
-		}else if(current == 0x8 && i>0){
+		if(current == 0x8 && i > 0){
 			printChar(current);
 			printChar(0x0);
 			printChar(current);
-			i = i - 2;
-			
-		}else{
+			i--;	
+		}else if(i <= strLength && current != 0x8 && current != 0xD){
 			str[i] = current;
 			printChar(str[i]);
+			i++;
 		}
 	}
 	nextLine();
