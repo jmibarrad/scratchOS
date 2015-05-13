@@ -8,6 +8,7 @@
 	.global _loadProgram
 	.global _readChar
 	.global _printChar
+	.global _readSector
 	;	.extern _handleInterrupt21
 
 ;void putInMemory (int segment, int address, char character)
@@ -25,10 +26,12 @@ _putInMemory:
 	ret
 
 _printChar: 
-	mov si, sp
-	mov al, [si+2]  
+	push bp
+	mov bp, sp
+	mov al, [bp+4]  
 	mov ah, #0x0e
 	int #0x10
+	pop bp
 	ret
 
 _readChar:
@@ -54,6 +57,31 @@ _loadProgram:
 	int #0x13 		;call BIOS disk read function
 	jmp #0x2000:#0 	; Switch to program
 
+;_readSector(char *buffer, int sector)
+_readSector:
+	push bp
+	mov bp, sp
+	sub sp, #6
+	mov bx, [bp+4]
+	mov ax, [bp+6]
+	mov cl, #36
+	div cl
+	xor ah, ah
+	mov [bp-2], ax
+	mov ax, [bp+6]
+	mov cl, #18
+	div cl
+	and al, #0x1
+	xor dx, dx
+	mov dl, al
+	mov [bp-4], dx
+	inc ah
+	xor dx, dx
+	mov dl, ah
+	mov [bp-6], dx
+	add sp, #6
+	ret
+	
 ;void makeInterrupt21()
 ;this sets up the interrupt 0x21 vector
 ;when an interrupt 0x21 is called in the future, 
