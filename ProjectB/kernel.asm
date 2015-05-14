@@ -15,7 +15,8 @@
 	.global _interrupt21ServiceRoutine
 	.extern _printString
 	.extern _readString
-	.global _setCursor
+	.global _clrScreen
+	.global _getTime
 	
 ;void putInMemory (int segment, int address, char character)
 _putInMemory:
@@ -28,6 +29,23 @@ _putInMemory:
 	mov ds,ax
 	mov [si],cl
 	pop ds
+	pop bp
+	ret
+
+
+_getTime:
+	clc
+	push bp
+	mov bp, sp
+	mov ah, #0x02
+	int  #0x1A
+	mov si, [bp+4]
+	mov [si],  ch
+	mov si, [bp+6]
+	mov [si], cl
+	mov si, [bp+8]
+	mov [si], dh
+	mov dl, #0
 	pop bp
 	ret
 
@@ -97,18 +115,26 @@ _readSector:
 	pop bp
 	ret
 
+_clrScreen:
+	mov ah,#6    
+        mov al,#0
+        mov bh,#7
+        mov cx,#0
+        mov dl,#79
+        mov dh,#24
+        int  #0x10
+	call _setCursor
+	ret
+
 _setCursor:
 	mov ah, #2		;Set cursor position
-	mov bh, #1		;Page Number
-	mov dh, #0		;Row
-	mov dl, #0		;Column
-	int #0x10
-	mov ah, #5		;Set active display page
-	mov al, #1		;Page Number
+	mov bh, #0		;Page Number
+	mov dh, #3		;Row
+	mov dl, #5		;Column
 	int #0x10
 	mov ah, #0xB		;Set background/border Color
 	mov bh, #0		
-	mov bl, #0xC		;Set color
+	mov bl, #0x4		;Set color
 	int #0x10
 	ret
 

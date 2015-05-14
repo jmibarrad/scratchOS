@@ -4,38 +4,31 @@
 #define strLength 80
 
 void printString(char str[]);
-void cleanScreen();
 void readString(char str[]);
 void nextLine();
+void drawBar();
+
 
 void main(){
-
-	/*char str[strLength];
-	char buffer[512];
-	char* str2 = "Enter your name: ";
 	
-	cleanScreen();
-	printString(str2);
-	readString(str);
 	
-	readSector(buffer, 30);
-	printString(buffer);
-
-	printString("Program Finished");
-*/
-	cleanScreen();
-	setCursor();
+	int hr;
+	int min;
+	int sec;
+	getTime(&hr, &min, &sec);
+	
+	clrScreen();
+	drawBar();
 	makeInterrupt21();
 	loadProgram();
-	
+
 }
 
 void printString(char str[]){
 	int i;	
-	for(i=0; str[i]!='\0'; i++){
+	for(i=0; str[i] != '\0'; i++){
 		printChar(str[i]);
 	}
-	//nextLine();
 }
 
 void readString(char str[]){
@@ -52,7 +45,7 @@ void readString(char str[]){
 			printChar(0x0);
 			printChar(current);
 			i--;	
-		}else if(i <= strLength && current != 0x8 && current != 0xD){
+		}else if(i < strLength-1 && current != 0x8 && current != 0xD){
 			str[i] = current;
 			printChar(str[i]);
 			i++;
@@ -67,14 +60,19 @@ void nextLine(){
 	printChar('\n');
 }
 
-void cleanScreen(){
-
+void drawBar(){
 	int x, y;
 	for(y=0; y < 25; y++){
 		for(x=0; x < RMVA; x++){
-			putInMemory(BASE_ADDRESS, memVideoAddr+(x)+(y*RMVA), ' ');
-			putInMemory(BASE_ADDRESS, memVideoAddr+(x+1)+(y*RMVA), 0x2);
+			if(y<2){
+				putInMemory(BASE_ADDRESS, memVideoAddr+(x)+(y*RMVA), 0x33);
+			}
+			if(x==RMVA-1 && y>=2){
+				putInMemory(BASE_ADDRESS, memVideoAddr+(x)+(y*RMVA), 0x77);
+			}
+			if(y>23){
+				putInMemory(BASE_ADDRESS, memVideoAddr+(x)+(y*RMVA), 0x77);
+			}
 		}
 	}
-
 }
